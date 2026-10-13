@@ -11,7 +11,7 @@
     right: 1rem;
     bottom: 1rem;
     z-index: 1036;
-    max-width: min(28rem, calc(100vw - 2rem));
+    max-width: 28rem;
 }
 .local-eledia-xmas-snow-help {
     position: fixed;
@@ -53,7 +53,7 @@
     border: 0;
     border-radius: 50%;
     /* Opaque tint, because the control floats over arbitrary page content. */
-    background: color-mix(in srgb, var(--lh-primary, #194866) 8%, var(--lh-bg-white, #ffffff));
+    background: color-mix(in srgb, var(--lh-primary, #194866) 8%, var(--lh-bg-white, #fff));
     color: var(--lh-primary, #194866);
     cursor: pointer;
     box-shadow: var(--lh-shadow, 0 1px 3px rgba(60, 64, 67, .12));
@@ -71,7 +71,7 @@
 }
 .local-eledia-xmas-toggle:hover,
 .local-eledia-xmas-toggle:focus-visible {
-    background: color-mix(in srgb, var(--lh-primary, #194866) 15%, var(--lh-bg-white, #ffffff));
+    background: color-mix(in srgb, var(--lh-primary, #194866) 15%, var(--lh-bg-white, #fff));
     box-shadow: var(--lh-shadow-hover, 0 4px 16px rgba(60, 64, 67, .18));
     transform: scale(1.1);
 }
@@ -83,6 +83,7 @@
     width: 1.125rem;
     height: 1.125rem;
 }
+
 @media (prefers-reduced-motion: reduce) {
     .local-eledia-xmas-toggle {
         transition: none;
@@ -102,7 +103,7 @@
     padding: .4rem .65rem;
     border-radius: var(--lh-radius-sm, 8px);
     background: var(--lh-text, #1f2937);
-    color: var(--lh-bg-white, #ffffff);
+    color: var(--lh-bg-white, #fff);
     font-size: .8rem;
     line-height: 1.4;
     pointer-events: none;
@@ -131,6 +132,7 @@
 .local-eledia-xmas-preview-controls label {
     margin: 0;
 }
+
 @media print {
     .local-eledia-xmas {
         display: none;
@@ -175,8 +177,9 @@
     display: block;
     font-size: 3rem;
 }
-.local-eledia-xmas [hidden] {
-    display: none !important;
+/* The ID outranks Bootstrap and theme display rules, so the hidden attribute always wins. */
+#local-eledia-xmas [hidden] {
+    display: none;
 }
 
 .local-eledia-xmas-preview-label {
@@ -196,7 +199,7 @@
     position: fixed;
     right: 1rem;
     bottom: 4.5rem;
-    max-width: min(24rem, calc(100vw - 2rem));
+    max-width: 24rem;
     padding: .8rem 1rem;
     border-radius: .75rem;
     background: #fff;
@@ -225,4 +228,17 @@
     flex-wrap: wrap;
     align-items: center;
     gap: .5rem;
+}
+
+/* Keep the panels inside narrow viewports: each breakpoint is the panel width plus its 1rem margins. */
+@media (max-width: 30rem) {
+    .local-eledia-xmas-controls {
+        max-width: calc(100vw - 2rem);
+    }
+}
+
+@media (max-width: 26rem) {
+    .local-eledia-xmas-celebration {
+        max-width: calc(100vw - 2rem);
+    }
 }

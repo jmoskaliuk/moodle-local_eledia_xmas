@@ -25,8 +25,8 @@
 defined('MOODLE_INTERNAL') || die();
 
 $plugin->component = 'local_eledia_xmas';
-$plugin->version = 2026101301;
+$plugin->version = 2026101302;
 $plugin->requires = 2024100700;
 $plugin->maturity = MATURITY_BETA;
-$plugin->release = '0.3.1';
+$plugin->release = '0.3.2';
 $plugin->supported = [405, 502];

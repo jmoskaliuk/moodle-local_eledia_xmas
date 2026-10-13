@@ -1,6 +1,6 @@
 # eLeDia | Xmas
 
-Moodle-Plugin, Beta 0.3.1, für Moodle 4.5 bis 5.2 (PHP 8.1+).
+Moodle-Plugin, Beta 0.3.2, für Moodle 4.5 bis 5.2 (PHP 8.1+).
 
 ## Installation
 
