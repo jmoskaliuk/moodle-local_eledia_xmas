@@ -68,6 +68,13 @@ class hook_callbacks {
             'homeurl' => (new \moodle_url('/?redirect=0'))->out(false),
             'dashboardurl' => (new \moodle_url('/my/'))->out(false),
             'coursesurl' => (new \moodle_url('/my/courses.php'))->out(false),
+            // Bulky page data travels as a data attribute; js_call_amd arguments must stay below 1024 characters.
+            'pagedata' => json_encode([
+                'quizstates' => self::quiz_states($PAGE->course->id, $USER->id),
+                'completionstates' => self::completion_states($PAGE->course, $USER->id),
+                'audio' => self::audio_urls(),
+                'strings' => $strings,
+            ]),
         ]));
         $PAGE->requires->js_call_amd('local_eledia_xmas/snow', 'init', [[
             'preview' => $preview,
@@ -79,10 +86,6 @@ class hook_callbacks {
             'eastereggs' => !empty($config->eastereggs),
             'storagekey' => 'local_eledia_xmas:' . sha1($CFG->wwwroot . ':' . $USER->id),
             'seasonyear' => configuration::season_year($config, time()),
-            'quizstates' => self::quiz_states($PAGE->course->id, $USER->id),
-            'completionstates' => self::completion_states($PAGE->course, $USER->id),
-            'audio' => self::audio_urls(),
-            'strings' => $strings,
         ]]);
     }
 
@@ -125,9 +128,12 @@ class hook_callbacks {
         }
         require_once($CFG->libdir . '/completionlib.php');
         $completion = new \completion_info($course);
-        if (!$completion->is_enabled() || !is_enrolled(\context_course::instance($course->id), $userid, '', true)) {
+        $context = \context_course::instance($course->id);
+        if (!$completion->is_enabled() || !is_enrolled($context, $userid, '', true)) {
             return [];
         }
+        // Check the user whose data is read, so the guard stays correct if another user is passed.
+        $canviewgrades = has_capability('moodle/grade:view', $context, $userid);
         $visiblegrades = [];
         $sql = "SELECT gi.id, gi.itemmodule, gi.iteminstance, gi.itemnumber
                   FROM {grade_items} gi
@@ -149,10 +155,8 @@ class hook_callbacks {
             $data = $completion->get_data($cm, true, $userid);
             // Do not expose a hidden grade through the celebration. Failed completion is not a success.
             if (
-                $cm->completiongradeitemnumber !== null && (!has_capability(
-                    'moodle/grade:view',
-                    \context_course::instance($course->id)
-                ) || empty($visiblegrades[$cm->modname . ':' . $cm->instance . ':' . $cm->completiongradeitemnumber]))
+                $cm->completiongradeitemnumber !== null && (!$canviewgrades
+                    || empty($visiblegrades[$cm->modname . ':' . $cm->instance . ':' . $cm->completiongradeitemnumber]))
             ) {
                 continue;
             }
@@ -179,7 +183,7 @@ class hook_callbacks {
             return [];
         }
         $context = \context_course::instance($courseid);
-        if (!has_capability('moodle/grade:view', $context)) {
+        if (!has_capability('moodle/grade:view', $context, $userid)) {
             return [];
         }
         $sql = "SELECT gi.iteminstance, gi.gradepass, gg.finalgrade, gg.hidden AS gradehidden

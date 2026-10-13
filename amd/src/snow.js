@@ -26,9 +26,9 @@ import {init as initSurprises} from 'local_eledia_xmas/surprises';
 
 /**
  * Initialise the seasonal overlay once per page.
- * @param {Object} config Validated server configuration and translated strings.
+ * @param {Object} settings Validated server configuration.
  */
-export const init = config => {
+export const init = settings => {
     const root = document.getElementById('local-eledia-xmas');
 
     if (!root || root.dataset.initialized) {
@@ -36,6 +36,8 @@ export const init = config => {
     }
 
     root.dataset.initialized = 'true';
+    // Strings, audio and completion states come from the overlay markup to keep the AMD call small.
+    const config = {...settings, ...JSON.parse(root.dataset.pagedata || '{}')};
     const celebrations = initCelebrations(root, config);
     const surprises = initSurprises(root, config, celebrations);
     const canvas = root.querySelector('[data-region="snow"]');

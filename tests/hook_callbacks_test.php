@@ -46,6 +46,8 @@ final class hook_callbacks_test extends \advanced_testcase {
         hook_callbacks::before_footer($hook);
         $this->assertStringContainsString('id="local-eledia-xmas"', $hook->get_output());
         $this->assertStringContainsString('data-action="preview"', $hook->get_output());
+        // Strings and states travel in the markup so that js_call_amd stays below its 1024-character limit.
+        $this->assertStringContainsString('data-pagedata="{&quot;quizstates&quot;', $hook->get_output());
     }
 
     /**
