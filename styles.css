@@ -1,0 +1,228 @@
+.local-eledia-xmas canvas {
+    position: fixed;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 1035;
+}
+.local-eledia-xmas-controls {
+    position: fixed;
+    right: 1rem;
+    bottom: 1rem;
+    z-index: 1036;
+    max-width: min(28rem, calc(100vw - 2rem));
+}
+.local-eledia-xmas-snow-help {
+    position: fixed;
+    top: 30%;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 1036;
+    width: 28rem;
+    max-width: calc(100vw - 2rem);
+    padding: 1.25rem;
+    border: 1px solid #adc5d4;
+    border-radius: 1rem;
+    background: #fff;
+    color: #243746;
+    box-shadow: 0 8px 30px #183e3430;
+    text-align: center;
+    pointer-events: none;
+}
+.local-eledia-xmas-snow-help p {
+    margin: .5rem 0 0;
+}
+.local-eledia-xmas-controls-preview {
+    padding: .75rem;
+    border: 1px solid #dce5de;
+    border-radius: .75rem;
+    background: #fff;
+    color: #294738;
+    box-shadow: 0 4px 20px #183e3420;
+}
+/* Compact personal action, styled like the LernHive course card actions (secondary circle). */
+.local-eledia-xmas-toggle {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.25rem;
+    height: 2.25rem;
+    padding: 0;
+    border: 0;
+    border-radius: 50%;
+    /* Opaque tint, because the control floats over arbitrary page content. */
+    background: color-mix(in srgb, var(--lh-primary, #194866) 8%, var(--lh-bg-white, #ffffff));
+    color: var(--lh-primary, #194866);
+    cursor: pointer;
+    box-shadow: var(--lh-shadow, 0 1px 3px rgba(60, 64, 67, .12));
+    transition: transform .15s ease, box-shadow .18s ease, background-color .15s ease;
+}
+/* Keep the 44px touch target around the 36px visual circle. */
+.local-eledia-xmas-toggle::before {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 2.75rem;
+    height: 2.75rem;
+    transform: translate(-50%, -50%);
+}
+.local-eledia-xmas-toggle:hover,
+.local-eledia-xmas-toggle:focus-visible {
+    background: color-mix(in srgb, var(--lh-primary, #194866) 15%, var(--lh-bg-white, #ffffff));
+    box-shadow: var(--lh-shadow-hover, 0 4px 16px rgba(60, 64, 67, .18));
+    transform: scale(1.1);
+}
+.local-eledia-xmas-toggle:focus-visible {
+    outline: .125rem solid var(--lh-accent, #f98012);
+    outline-offset: .18rem;
+}
+.local-eledia-xmas-toggle svg {
+    width: 1.125rem;
+    height: 1.125rem;
+}
+@media (prefers-reduced-motion: reduce) {
+    .local-eledia-xmas-toggle {
+        transition: none;
+    }
+    .local-eledia-xmas-toggle:hover,
+    .local-eledia-xmas-toggle:focus-visible {
+        transform: none;
+    }
+}
+.local-eledia-xmas-toggle::after {
+    content: attr(data-tooltip);
+    position: absolute;
+    right: 0;
+    bottom: calc(100% + .5rem);
+    width: max-content;
+    max-width: calc(100vw - 3rem);
+    padding: .4rem .65rem;
+    border-radius: var(--lh-radius-sm, 8px);
+    background: var(--lh-text, #1f2937);
+    color: var(--lh-bg-white, #ffffff);
+    font-size: .8rem;
+    line-height: 1.4;
+    pointer-events: none;
+    visibility: hidden;
+}
+.local-eledia-xmas-toggle:hover::after,
+.local-eledia-xmas-toggle:focus-visible::after {
+    visibility: visible;
+}
+.local-eledia-xmas-toggle[aria-pressed="true"] .local-eledia-xmas-toggle-slash {
+    display: none;
+}
+.local-eledia-xmas-status {
+    display: block;
+    font-size: .75rem;
+    margin-top: .4rem;
+}
+.local-eledia-xmas-preview-controls {
+    display: flex;
+    flex-wrap: wrap;
+    gap: .75rem;
+    align-items: center;
+    font-size: .8rem;
+    margin-top: .75rem;
+}
+.local-eledia-xmas-preview-controls label {
+    margin: 0;
+}
+@media print {
+    .local-eledia-xmas {
+        display: none;
+    }
+}
+
+.local-eledia-xmas-treasure {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 1036;
+    width: 44px;
+    height: 44px;
+    border: 0;
+    background: transparent;
+    color: #35657d;
+    font-size: 2rem;
+    cursor: pointer;
+    text-shadow: 0 2px 6px #fff;
+}
+.local-eledia-xmas-treasure[data-discovery="bauble"] {
+    font-size: 2rem;
+}
+.local-eledia-xmas-treasure[data-discovery="snowball"] {
+    color: #427a9a;
+}
+.local-eledia-xmas-surprise {
+    position: fixed;
+    left: 1rem;
+    bottom: 16rem;
+    z-index: 1037;
+    width: 22rem;
+    max-width: calc(100vw - 2rem);
+    padding: 1.25rem;
+    background: #fffdf8;
+    color: #344a3b;
+    border: 1px solid #dfd7be;
+    border-radius: 1rem;
+    box-shadow: 0 8px 30px #183e3430;
+}
+.local-eledia-xmas-character {
+    display: block;
+    font-size: 3rem;
+}
+.local-eledia-xmas [hidden] {
+    display: none !important;
+}
+
+.local-eledia-xmas-preview-label {
+    display: block;
+    margin-top: .75rem;
+    font-size: .8rem;
+}
+.local-eledia-xmas-preview-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: .5rem 1rem;
+    font-size: .8rem;
+    margin-top: .5rem;
+}
+
+.local-eledia-xmas-celebration {
+    position: fixed;
+    right: 1rem;
+    bottom: 4.5rem;
+    max-width: min(24rem, calc(100vw - 2rem));
+    padding: .8rem 1rem;
+    border-radius: .75rem;
+    background: #fff;
+    color: #1b4963;
+    box-shadow: 0 3px 16px #183e3430;
+    pointer-events: none;
+}
+
+.local-eledia-xmas-switches {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: .5rem;
+}
+.local-eledia-xmas-switches .local-eledia-xmas-toggle {
+    flex: 0 0 auto;
+    margin: 0;
+    line-height: 1;
+    vertical-align: middle;
+}
+.local-eledia-xmas-switches svg {
+    display: block;
+}
+.local-eledia-xmas-seasondate {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: .5rem;
+}

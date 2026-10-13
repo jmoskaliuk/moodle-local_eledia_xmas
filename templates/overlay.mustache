@@ -1,0 +1,80 @@
+{{!
+    @template local_eledia_xmas/overlay
+    Seasonal canvas and keyboard-accessible toggle.
+    Example context (json): {"preview": true}
+}}
+<div id="local-eledia-xmas" class="local-eledia-xmas">
+    <canvas data-region="snow" aria-hidden="true"></canvas>
+    <div class="local-eledia-xmas-snow-help" data-region="snow-help" role="status" hidden>
+        <strong data-region="snow-help-title"></strong>
+        <p>{{#str}} snowhelpinstruction, local_eledia_xmas {{/str}}</p>
+    </div>
+    <div class="local-eledia-xmas-discoveries">
+        <button type="button" data-discovery="star" class="local-eledia-xmas-treasure" hidden
+                aria-label="{{#str}} discoverstar, local_eledia_xmas {{/str}}" aria-expanded="false"
+                aria-controls="local-eledia-xmas-surprise"><span aria-hidden="true">❄</span></button>
+        <button type="button" data-discovery="bauble" class="local-eledia-xmas-treasure" hidden
+                aria-label="{{#str}} discoverbauble, local_eledia_xmas {{/str}}" aria-expanded="false"
+                aria-controls="local-eledia-xmas-surprise"><span aria-hidden="true">❄</span></button>
+        <button type="button" data-discovery="snowball" class="local-eledia-xmas-treasure" hidden
+                aria-label="{{#str}} discoversnowball, local_eledia_xmas {{/str}}" aria-expanded="false"
+                aria-controls="local-eledia-xmas-surprise"><span aria-hidden="true">❄</span></button>
+    </div>
+    <section id="local-eledia-xmas-surprise" class="local-eledia-xmas-surprise" hidden
+             aria-label="{{#str}} surprise, local_eledia_xmas {{/str}}" tabindex="-1">
+        <span data-greeting="character" class="local-eledia-xmas-character" aria-hidden="true"></span>
+        <p data-greeting="star" hidden>{{#str}} santagreeting, local_eledia_xmas {{/str}}</p>
+        <p data-greeting="bauble" hidden>{{#str}} reindeergreeting, local_eledia_xmas {{/str}}</p>
+        <p data-greeting="snowball" hidden>{{#str}} snowmangreeting, local_eledia_xmas {{/str}}</p>
+        <button type="button" class="btn btn-outline-secondary" data-action="speak" hidden>
+            {{#str}} speak, local_eledia_xmas {{/str}}
+        </button>
+        <button type="button" class="btn btn-secondary" data-action="close-surprise">
+            {{#str}} close, local_eledia_xmas {{/str}}
+        </button>
+    </section>
+    <div class="local-eledia-xmas-controls{{#preview}} local-eledia-xmas-controls-preview{{/preview}}">
+        <div class="local-eledia-xmas-switches">
+            <button type="button" class="local-eledia-xmas-toggle" data-action="toggle" aria-pressed="false"
+                    aria-label="{{#str}} snowon, local_eledia_xmas {{/str}}"
+                    data-tooltip="{{#str}} snowon, local_eledia_xmas {{/str}}">
+                <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor"
+                     stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+                    <path d="M12 2v20M3.34 7l17.32 10M3.34 17L20.66 7
+                             M9 4l3 3 3-3M9 20l3-3 3 3
+                             M3.6 10.6l4.1-1.1-1.1-4.1M17.4 18.6l-1.1-4.1 4.1-1.1
+                             M6.6 18.6l1.1-4.1-4.1-1.1M20.4 10.6l-4.1-1.1 1.1-4.1"/>
+                    <path class="local-eledia-xmas-toggle-slash" d="M3 3l18 18" stroke-width="2.8"/>
+                </svg>
+            </button>
+            <button type="button" class="local-eledia-xmas-toggle" data-action="sound" aria-pressed="false"
+                    aria-label="{{#str}} soundon, local_eledia_xmas {{/str}}"
+                    data-tooltip="{{#str}} soundon, local_eledia_xmas {{/str}}">
+                <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor"
+                     stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+                    <path d="M9 18V5l12-2v13M9 8l12-2"/>
+                    <ellipse cx="6" cy="18" rx="3" ry="2"/><ellipse cx="18" cy="16" rx="3" ry="2"/>
+                    <path class="local-eledia-xmas-toggle-slash" d="M3 3l18 18" stroke-width="2.8"/>
+                </svg>
+            </button>
+        </div>
+        <div class="local-eledia-xmas-celebration" data-region="celebration" role="status" hidden></div>
+        <span data-region="status" role="status" class="local-eledia-xmas-status"{{^preview}} hidden{{/preview}}></span>
+        {{#preview}}
+            <strong class="local-eledia-xmas-preview-label">{{#str}} preview_active, local_eledia_xmas {{/str}}</strong>
+            <nav class="local-eledia-xmas-preview-links" aria-label="{{#str}} preview, local_eledia_xmas {{/str}}">
+                <a href="{{homeurl}}">{{#str}} page_site-index, local_eledia_xmas {{/str}}</a>
+                <a href="{{dashboardurl}}">{{#str}} page_my-index, local_eledia_xmas {{/str}}</a>
+                <a href="{{coursesurl}}">{{#str}} page_my-courses, local_eledia_xmas {{/str}}</a>
+                <a href="{{stopurl}}">{{#str}} preview_stop, local_eledia_xmas {{/str}}</a>
+            </nav>
+            <div class="local-eledia-xmas-preview-controls">
+                <label><input type="checkbox" data-action="fast"> {{#str}} fast, local_eledia_xmas {{/str}}</label>
+                <label><input type="checkbox" data-action="cover"> {{#str}} fullcover, local_eledia_xmas {{/str}}</label>
+                <button type="button" class="btn btn-outline-secondary btn-sm" data-action="preview">
+                    {{#str}} testpause, local_eledia_xmas {{/str}}
+                </button>
+            </div>
+        {{/preview}}
+    </div>
+</div>
