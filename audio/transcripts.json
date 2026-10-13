@@ -1,5 +1,15 @@
 {
+  "en": {
+    "star": "Ho ho ho! Take a moment to recharge. Then continue with a fresh perspective.",
+    "bauble": "Time for a short break. Your next idea can wait a moment.",
+    "snowball": "Take a breath and clear your head. Then continue at your own pace."
+  },
   "de": {
+    "star": "Ho ho ho! Nehmen Sie sich einen Moment zum Durchatmen. Danach geht es mit frischem Blick weiter.",
+    "bauble": "Zeit für eine kurze Pause. Ihre nächste Idee darf einen Moment warten.",
+    "snowball": "Atmen Sie durch und bekommen Sie den Kopf frei. Danach geht es in Ihrem Tempo weiter."
+  },
+  "de_du": {
     "star": "Ho ho ho! Nimm dir einen Moment zum Durchatmen. Danach geht es mit frischem Blick weiter.",
     "bauble": "Zeit für eine kurze Pause. Deine nächste Idee darf einen Moment warten.",
     "snowball": "Atme durch und bekomme den Kopf frei. Danach geht es in deinem Tempo weiter."

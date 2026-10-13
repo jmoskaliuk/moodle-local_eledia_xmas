@@ -101,15 +101,23 @@ class hook_callbacks {
                 $audio[$type] = (new \moodle_url('/local/eledia_xmas' . $file))->out(false);
             }
         }
-        $language = explode('_', current_language())[0];
+        // Try the exact language first (de_du), then its parent (de); the transcript decides which recording fits.
+        $languages = array_unique(array_filter([
+            current_language(),
+            get_parent_language(current_language()),
+            explode('_', current_language())[0],
+        ]));
         // If language customisation changes a greeting, use the local voice instead of stale recorded wording.
         $manifest = __DIR__ . '/../audio/transcripts.json';
         $transcripts = is_file($manifest) ? json_decode(file_get_contents($manifest), true) : [];
         foreach (['star' => 'santagreeting', 'bauble' => 'reindeergreeting', 'snowball' => 'snowmangreeting'] as $key => $string) {
-            $file = '/audio/' . $language . '/' . $key . '.mp3';
             $text = get_string($string, 'local_eledia_xmas');
-            if (($transcripts[$language][$key] ?? null) === $text && is_file(__DIR__ . '/..' . $file)) {
-                $audio[$key] = (new \moodle_url('/local/eledia_xmas' . $file))->out(false);
+            foreach ($languages as $language) {
+                $file = '/audio/' . $language . '/' . $key . '.mp3';
+                if (($transcripts[$language][$key] ?? null) === $text && is_file(__DIR__ . '/..' . $file)) {
+                    $audio[$key] = (new \moodle_url('/local/eledia_xmas' . $file))->out(false);
+                    break;
+                }
             }
         }
         return $audio;

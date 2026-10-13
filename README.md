@@ -1,6 +1,6 @@
 # eLeDia | Xmas
 
-Moodle-Plugin, Beta 0.3.2, für Moodle 4.5 bis 5.2 (PHP 8.1+).
+Moodle-Plugin, Beta 0.4.0, für Moodle 4.5 bis 5.2 (PHP 8.1+).
 
 ## Installation
 
@@ -31,7 +31,7 @@ Das Plugin ist anfangs deaktiviert. Die Admin-Vorschau funktioniert unabhängig 
   Ohne passende Bildfläche bleiben sie verborgen; eigene Themes können `data-xmas-ledge` als Ablage anbieten.
 - Drei optionale Entdeckungen während der Winterpause: Schneeflocken mit Weihnachtsmann, Rentier und Schneemann.
 - Grüße als Text; freiwilliges Anhören als lokale MP3 oder mit einer lokalen Browser-/Gerätestimme, keine automatische Sprachausgabe.
-- Deutsch und Englisch.
+- Englisch, Deutsch formell (Sie, Sprachpaket `de`) und Deutsch Du (Sprachpaket `de_du`).
 
 ## Vorschau und Gimmicks
 
@@ -93,7 +93,9 @@ ohne Freigabe bleibt der Erfolgsgruß visuell. Ein Klick auf den Noten-Schalter 
 Beginn und Ende stehen jeweils in einer Zeile mit Tag und ausgeschriebenem, übersetztem Monat.
 Die Auswahl wiederholt sich jährlich und benötigt keine Jahreszahl. Ungültige Kombinationen werden beim
 Speichern abgewiesen; der 29. Februar gilt in anderen Jahren am Monatsende. Bestehende Einstellungen bleiben erhalten.
-Alle UI-Texte kommen aus den Sprachdateien. Deutsch verwendet durchgehend die Du-Form.
+Alle UI-Texte kommen aus den Sprachdateien. `lang/de` verwendet die Sie-Form, `lang/de_du` überschreibt die
+Texte mit direkter Anrede in der Du-Form; alle übrigen Texte erbt `de_du` von `de`. Für die Du-Form muss auf der
+Website das Moodle-Sprachpaket „Deutsch - Du“ installiert sein.
 
 ## Weitere Belohnungen und Aufnahmen
 
@@ -104,7 +106,7 @@ Alle UI-Texte kommen aus den Sprachdateien. Deutsch verwendet durchgehend die Du
   Aktivitätsfeier aus; ein fehlgeschlagener Abschluss wird nicht als Erfolg gefeiert.
 - Gleichzeitig erkannte Erfolge erhalten nur eine Meldung: Kursabschluss vor bestandenem Test vor Aktivität.
   Jingles haben mindestens fünf Sekunden Abstand. Die Tonfreigabe gilt auch für diese Anlässe.
-- Die deutschen Figuren-Grüße sind auf Klick als MP3 verfügbar. Andere Sprachen und individuell angepasste
+- Die Figuren-Grüße sind auf Klick als MP3 verfügbar: Englisch, Deutsch (Sie) und Deutsch (Du). Individuell angepasste
   Texte verwenden eine verfügbare lokale Gerätestimme. `audio/transcripts.json` bindet jede Aufnahme an ihren
   exakten Text. Bei Änderungen an der Sprachdatei muss die Aufnahme neu erzeugt werden.
 - Ein-/Ausschalten, versteckte Tabs und Schließen eines Grußes beenden die jeweilige Wiedergabe.
