@@ -26,7 +26,8 @@ require_once(__DIR__ . '/../../config.php');
 require_login();
 require_capability('moodle/site:config', context_system::instance());
 $action = optional_param('action', '', PARAM_ALPHA);
-if ($action === 'start' || $action === 'stop') {
+// Session changes are accepted only from a submitted POST form; a plain GET just returns to the settings.
+if (($action === 'start' || $action === 'stop') && data_submitted()) {
     require_sesskey();
     if ($action === 'start') {
         $SESSION->local_eledia_xmas_preview = ['userid' => (int)$USER->id, 'until' => time() + HOURSECS];

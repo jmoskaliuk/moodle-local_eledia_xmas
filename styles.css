@@ -242,3 +242,8 @@
         max-width: calc(100vw - 2rem);
     }
 }
+
+.local-eledia-xmas-preview-stop {
+    display: inline;
+    margin: 0;
+}

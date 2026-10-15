@@ -1,6 +1,6 @@
 # eLeDia | Xmas
 
-Moodle-Plugin, Beta 0.4.0, für Moodle 4.5 bis 5.2 (PHP 8.1+).
+Moodle-Plugin, Beta 0.4.1, für Moodle 4.5 bis 5.2 (PHP 8.1+).
 
 ## Installation
 
@@ -86,7 +86,7 @@ Verzögerte Bewertungen werden beim nächsten Kursbesuch berücksichtigt.
 Browserlokale Kennungen pro Nutzer und Saison verhindern Wiederholungen; es werden keine
 Noten gespeichert. Nach Löschen des Browserspeichers können Aktivitäten erneut gefeiert werden.
 Ton ist anfangs aus. Browser benötigen nach Seitenwechsel einen Nutzerklick zur Audiofreigabe;
-ohne Freigabe bleibt der Erfolgsgruß visuell. Ein Klick auf den Noten-Schalter spielt einen Probeton.
+ohne Freigabe bleibt der Erfolgsgruß visuell. Das Einschalten über den Noten-Schalter gibt den Ton frei, spielt aber nichts ab.
 
 ## Zeitraum und Sprache
 

@@ -48,6 +48,9 @@ final class hook_callbacks_test extends \advanced_testcase {
         $this->assertStringContainsString('data-action="preview"', $hook->get_output());
         // Strings and states travel in the markup so that js_call_amd stays below its 1024-character limit.
         $this->assertStringContainsString('data-pagedata="{&quot;quizstates&quot;', $hook->get_output());
+        // Ending the preview changes the session, so it is a POST form and the sesskey is not part of a link.
+        $this->assertStringContainsString('<form method="post"', $hook->get_output());
+        $this->assertStringNotContainsString('sesskey=', $hook->get_output());
     }
 
     /**

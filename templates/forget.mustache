@@ -1,0 +1,14 @@
+{{!
+    @template local_eledia_xmas/forget
+    Explain and remove this user's eLeDia | Xmas entries in the current browser.
+    Example context (json): {}
+}}
+<div class="local-eledia-xmas-forget">
+    <p>{{#str}} forget_desc, local_eledia_xmas {{/str}}</p>
+    <button type="button" class="btn btn-secondary" data-action="local-eledia-xmas-forget"
+            data-done="{{#cleanstr}} forget_done, local_eledia_xmas {{/cleanstr}}"
+            data-failed="{{#cleanstr}} forget_failed, local_eledia_xmas {{/cleanstr}}">
+        {{#str}} forget_button, local_eledia_xmas {{/str}}
+    </button>
+    <p class="mt-3" role="status" data-region="local-eledia-xmas-forget-status"></p>
+</div>

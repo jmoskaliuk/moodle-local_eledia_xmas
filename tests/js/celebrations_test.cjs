@@ -17,7 +17,11 @@ const setup = (storage = new Map(), states = {}, audio = {}, seasonyear = 2026) 
         CourseEvents: {manualCompletionToggled: 'completion'},
         document: {hidden: false, addEventListener(name, fn) {listeners[name] = fn;}},
         window: {addEventListener() {}},
-        localStorage: {getItem: key => storage.get(key) ?? null, setItem: (key, value) => storage.set(key, value)},
+        localStorage: {
+            getItem: key => storage.get(key) ?? null, setItem: (key, value) => storage.set(key, value),
+            removeItem: key => storage.delete(key), key: index => [...storage.keys()][index] ?? null,
+            get length() {return storage.size;},
+        },
         matchMedia: () => ({matches: true}), performance: {now: () => 10000},
         clearTimeout() {}, setTimeout: () => 1,
         Audio: class {
@@ -67,7 +71,8 @@ test('undo does not celebrate; discovery and manual completion share deduplicati
 test('audio is opt-in, single-player, and stops on disable or hidden tab', async() => {
     const state = setup(undefined, {}, {activity: '/activity.mp3', star: '/star.mp3'});
     state.listeners.completion({detail: {completed: true, cmid: 7}}); assert.equal(state.players.length, 0);
-    await state.buttons.click(); assert.equal(state.players.length, 1);
+    await state.buttons.click(); assert.equal(state.players.length, 0);
+    state.listeners.completion({detail: {completed: true, cmid: 8}}); assert.equal(state.players.length, 1);
     state.controls.playGreeting('star', () => assert.fail('Unexpected fallback'));
     assert.equal(state.players[0].paused, true); assert.equal(state.players[1].paused, false);
     state.context.document.hidden = true; state.listeners.visibilitychange(); assert.equal(state.players[1].paused, true);
@@ -76,7 +81,7 @@ test('audio is opt-in, single-player, and stops on disable or hidden tab', async
     assert.equal(state.players[2].paused, true);
 });
 test('rewards persist across New Year within one season; sound choice persists across seasons', async() => {
-    const december = setup(undefined, {'activity:1': false}, {activity: '/activity.mp3'});
+    const december = setup(undefined, {'activity:1': false}, {activity: '/activity.mp3', discovery: '/discovery.mp3'});
     december.controls.checkQuizzes(); await december.buttons.click();
     assert.equal(december.storage.get('test:sound'), 'true');
     december.controls.discover('star');
@@ -86,4 +91,13 @@ test('rewards persist across New Year within one season; sound choice persists a
     const nextseason = setup(december.storage, {}, {}, 2027);
     nextseason.controls.discover('star'); assert.equal(nextseason.toast.hidden, false);
     assert.equal(nextseason.storage.get('test:sound'), 'true');
+});
+test('a new season removes rewards of earlier seasons but keeps the sound choice and other users', () => {
+    const storage = new Map([
+        ['test:sound', 'true'], ['test:rewards:2025:activity:1', 'true'], ['test:rewards:2026:activity:2', 'true'],
+        ['other:rewards:2025:activity:1', 'true'],
+    ]);
+    setup(storage, {}, {}, 2026);
+    assert.deepEqual([...storage.keys()].sort(),
+        ['other:rewards:2025:activity:1', 'test:rewards:2026:activity:2', 'test:sound']);
 });

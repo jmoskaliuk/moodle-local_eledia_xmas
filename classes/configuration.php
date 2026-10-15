@@ -82,6 +82,17 @@ class configuration {
     }
 
     /**
+     * Browser storage key for one user on this site; the overlay and the forget page share it.
+     *
+     * @param int $userid User whose browser entries are addressed.
+     * @return string Key prefix used in localStorage.
+     */
+    public static function storage_key(int $userid): string {
+        global $CFG;
+        return 'local_eledia_xmas:' . sha1($CFG->wwwroot . ':' . $userid);
+    }
+
+    /**
      * Name a season by the year it starts, so a season spanning New Year keeps one identity.
      *
      * @param \stdClass $config Plugin settings.

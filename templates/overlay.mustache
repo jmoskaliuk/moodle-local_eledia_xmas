@@ -1,7 +1,7 @@
 {{!
     @template local_eledia_xmas/overlay
     Seasonal canvas and keyboard-accessible toggle.
-    Example context (json): {"preview": true, "pagedata": "{}"}
+    Example context (json): {"preview": true, "pagedata": "{}", "stopurl": "https://example.com/local/eledia_xmas/preview.php", "sesskey": "abc"}
 }}
 <div id="local-eledia-xmas" class="local-eledia-xmas" data-pagedata="{{pagedata}}">
     <canvas data-region="snow" aria-hidden="true"></canvas>
@@ -66,7 +66,11 @@
                 <a href="{{homeurl}}">{{#str}} page_site-index, local_eledia_xmas {{/str}}</a>
                 <a href="{{dashboardurl}}">{{#str}} page_my-index, local_eledia_xmas {{/str}}</a>
                 <a href="{{coursesurl}}">{{#str}} page_my-courses, local_eledia_xmas {{/str}}</a>
-                <a href="{{stopurl}}">{{#str}} preview_stop, local_eledia_xmas {{/str}}</a>
+                <form method="post" action="{{stopurl}}" class="local-eledia-xmas-preview-stop">
+                    <input type="hidden" name="action" value="stop">
+                    <input type="hidden" name="sesskey" value="{{sesskey}}">
+                    <button type="submit" class="btn btn-link p-0">{{#str}} preview_stop, local_eledia_xmas {{/str}}</button>
+                </form>
             </nav>
             <div class="local-eledia-xmas-preview-controls">
                 <label><input type="checkbox" data-action="fast"> {{#str}} fast, local_eledia_xmas {{/str}}</label>

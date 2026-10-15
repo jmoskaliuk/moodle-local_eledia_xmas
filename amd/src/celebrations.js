@@ -65,6 +65,19 @@ export const init = (root, config) => {
             // Without durable storage, deduplicate for the current page only.
         }
     };
+    // Rewards of earlier seasons are never read again; remove them so the browser storage does not grow each year.
+    try {
+        const stale = [];
+        for (let index = 0; index < localStorage.length; index++) {
+            const item = localStorage.key(index);
+            if (item?.startsWith(config.storagekey + ':rewards:') && !item.startsWith(prefix + ':')) {
+                stale.push(item);
+            }
+        }
+        stale.forEach(item => localStorage.removeItem(item));
+    } catch (_) {
+        // Storage can be unavailable; nothing to clean up then.
+    }
     const read = key => readItem(prefix + ':' + key);
     const write = (key, value) => writeItem(prefix + ':' + key, value);
     // The sound choice is a lasting preference, independent of the season.
@@ -146,10 +159,10 @@ export const init = (root, config) => {
         sound = !sound;
         if (sound) {
             try {
+                // The click only unlocks audio; switching jingles on stays silent, also for a waiting celebration.
                 context = context || new AudioContext();
                 await context.resume();
                 lastChime = -Infinity;
-                chime(pending || 'activity');
                 pending = null;
             } catch (_) {
                 sound = false;

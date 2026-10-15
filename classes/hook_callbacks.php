@@ -34,7 +34,7 @@ class hook_callbacks {
      * @param \core\hook\output\before_footer_html_generation $hook Output hook.
      */
     public static function before_footer(\core\hook\output\before_footer_html_generation $hook): void {
-        global $PAGE, $OUTPUT, $CFG, $SESSION, $USER;
+        global $PAGE, $OUTPUT, $SESSION, $USER;
         if (!$PAGE->has_set_url()) {
             return;
         }
@@ -62,9 +62,8 @@ class hook_callbacks {
         }
         $hook->add_html($OUTPUT->render_from_template('local_eledia_xmas/overlay', [
             'preview' => $preview,
-            'stopurl' => (new \moodle_url('/local/eledia_xmas/preview.php', [
-                'action' => 'stop', 'sesskey' => sesskey(),
-            ]))->out(false),
+            'stopurl' => (new \moodle_url('/local/eledia_xmas/preview.php'))->out(false),
+            'sesskey' => sesskey(),
             'homeurl' => (new \moodle_url('/?redirect=0'))->out(false),
             'dashboardurl' => (new \moodle_url('/my/'))->out(false),
             'coursesurl' => (new \moodle_url('/my/courses.php'))->out(false),
@@ -84,7 +83,7 @@ class hook_callbacks {
             'fullcover' => !empty($config->fullcover),
             'ledges' => !empty($config->ledges),
             'eastereggs' => !empty($config->eastereggs),
-            'storagekey' => 'local_eledia_xmas:' . sha1($CFG->wwwroot . ':' . $USER->id),
+            'storagekey' => configuration::storage_key((int)$USER->id),
             'seasonyear' => configuration::season_year($config, time()),
         ]]);
     }

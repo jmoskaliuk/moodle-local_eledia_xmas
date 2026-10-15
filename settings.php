@@ -29,11 +29,12 @@ if ($hassiteconfig) {
     $ADMIN->add('localplugins', $settings);
     if ($ADMIN->fulltree) {
         $component = 'local_eledia_xmas';
-        $settings->add(new admin_setting_heading('local_eledia_xmas/preview', '', html_writer::link(
-            new moodle_url('/local/eledia_xmas/preview.php', ['action' => 'start', 'sesskey' => sesskey()]),
+        // Starting the preview changes the session, so it is a POST form; single_button adds the sesskey.
+        $settings->add(new admin_setting_heading('local_eledia_xmas/preview', '', $OUTPUT->render(new single_button(
+            new moodle_url('/local/eledia_xmas/preview.php', ['action' => 'start']),
             get_string('preview', $component),
-            ['class' => 'btn btn-secondary']
-        )));
+            'post'
+        ))));
         foreach (['enabled' => 0, 'scheduled' => 1, 'ledges' => 1, 'fullcover' => 0, 'eastereggs' => 1] as $key => $default) {
             $settings->add(new admin_setting_configcheckbox(
                 "$component/$key",

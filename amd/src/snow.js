@@ -75,7 +75,9 @@ export const init = settings => {
     let width = 0,
             height = 0,
             flakes = [],
-            terrain = [];
+            terrain = [],
+            reposeLimits = new Float64Array(0),
+            detailTables = [];
     let lastActivity = performance.now(),
             previous = 0,
             frame = 0;
@@ -95,7 +97,9 @@ export const init = settings => {
     const idleDelay = () => fast.checked ? 5000 : config.idledelay;
         // Wind deposits more snow in a few broad, unevenly spaced drifts.
 
-    const driftCenters = [0.08, 0.36, 0.73, 0.96];
+    // Shift and vary the drifts per page load so they never sit in exactly the same places.
+    const driftCenters = [0.08, 0.36, 0.73, 0.96].map(center => center + random(-0.04, 0.04));
+    const driftWidths = driftCenters.map(() => random(0.035, 0.06));
     /**
      * Choose a landing corridor influenced by wind.
      */
@@ -104,9 +108,9 @@ export const init = settings => {
             return random(0, width);
         }
 
-        const center = driftCenters[Math.floor(Math.random() * driftCenters.length)];
+        const drift = Math.floor(Math.random() * driftCenters.length);
         const gaussian = Math.sqrt(-2 * Math.log(Math.max(0.0001, Math.random()))) * Math.cos(Math.random() * Math.PI * 2);
-        return ((center + gaussian * 0.045) * width + width) % width;
+        return ((driftCenters[drift] + gaussian * driftWidths[drift]) * width + width) % width;
     }
 
     const makeFlake = (spread = false) => ({
@@ -315,6 +319,14 @@ export const init = settings => {
                 + oldTerrain[Math.min(left + 1, oldTerrain.length - 1)] * fraction) * height / oldHeight;
         });
         snowDepth = Math.max(0, ...terrain);
+        // Each column tolerates a slightly different slope, so flanks are irregular instead of straight.
+        reposeLimits = Float64Array.from({length: count}, () => spacing * random(0.6, 1));
+        // Fixed per page: fine, layered unevenness for the outline of the bank (wavelengths in pixels).
+        detailTables = [[150, 0.5], [60, 0.3], [22, 0.2]].map(([wavelength, weight]) => ({
+            wavelength,
+            weight,
+            values: Float64Array.from({length: Math.ceil(width / wavelength) + 2}, () => random(-1, 1)),
+        }));
 
         if (clearing) {
             clearing = {
@@ -335,8 +347,35 @@ export const init = settings => {
     function surface(x) {
         const index = Math.max(0, Math.min(terrain.length - 2, Math.floor(x / spacing)));
         const fraction = Math.max(0, Math.min(1, x / spacing - index));
-        const bump = terrain[index] * (1 - fraction) + terrain[index + 1] * fraction;
-        return height - bump;
+        const at = offset => terrain[Math.max(0, Math.min(terrain.length - 1, index + offset))];
+        const [p0, p1, p2, p3] = [at(-1), at(0), at(1), at(2)];
+        // Catmull-Rom passes through every column, so the bank curves smoothly without a 12 px polygon look.
+        const bump = 0.5 * (2 * p1 + (p2 - p0) * fraction + (2 * p0 - 5 * p1 + 4 * p2 - p3) * fraction ** 2
+            + (3 * p1 - p0 - 3 * p2 + p3) * fraction ** 3);
+        return height - Math.max(0, bump + detail(x, Math.max(0, bump)));
+    }
+    /**
+     * Fine unevenness that grows with the local depth; thin snow stays flat.
+     * @param {number} x Horizontal position.
+     * @param {number} depth Local snow depth.
+     * @returns {number} Offset in pixels.
+     */
+    function detail(x, depth) {
+        if (depth < 1) {
+            return 0;
+        }
+
+        let noise = 0;
+
+        for (const table of detailTables) {
+            const position = x / table.wavelength;
+            const index = Math.min(table.values.length - 2, Math.floor(position));
+            const fraction = position - index;
+            const eased = fraction * fraction * (3 - 2 * fraction);
+            noise += table.weight * (table.values[index] * (1 - eased) + table.values[index + 1] * eased);
+        }
+
+        return noise * Math.min(depth * 0.12, 9);
     }
     /**
      * Clear accumulation after an input without consuming the event.
@@ -463,7 +502,9 @@ export const init = settings => {
             for (let j = 0; j < terrain.length - 1; j++) {
                 const i = pass % 2 ? terrain.length - 2 - j : j;
                 const difference = terrain[i] - terrain[i + 1];
-                const excess = Math.max(0, Math.abs(difference) - spacing * 0.85);
+                // Wind from the left: gentle windward slopes rising to the right, steeper lee slopes.
+                const limit = (reposeLimits[i] || spacing * 0.85) * (difference < 0 ? 0.75 : 1.2);
+                const excess = Math.max(0, Math.abs(difference) - limit);
                 const transfer = Math.sign(difference) * excess * 0.45;
                 terrain[i] -= transfer;
                 terrain[i + 1] += transfer;
@@ -473,7 +514,7 @@ export const init = settings => {
         const settled = terrain.slice();
 
         for (let i = 0; i < terrain.length - 1; i++) {
-            const flow = (terrain[i] - terrain[i + 1]) * Math.min(0.2, dt * 5);
+            const flow = (terrain[i] - terrain[i + 1]) * Math.min(0.08, dt * 2);
             settled[i] -= flow;
             settled[i + 1] += flow;
         }
@@ -490,9 +531,9 @@ export const init = settings => {
             ctx.moveTo(0, height);
             ctx.lineTo(0, surface(0));
 
-            for (let x = 0; x <= width; x += spacing) {
-                const next = Math.min(width, x + spacing);
-                ctx.quadraticCurveTo(x, surface(x), (x + next) / 2, (surface(x) + surface(next)) / 2);
+            // Short segments keep the fine outline detail visible.
+            for (let x = 0; x <= width; x += 3) {
+                ctx.lineTo(x, surface(x));
             }
 
             ctx.lineTo(width, surface(width));
